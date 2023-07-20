@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Rating } from "./Rating";
 import Image from "next/image"; // NextJS 12 => import Image from 'next/legacy/image'
+import ReactMarkdown from "react-markdown";
 
 interface ProductDetails {
   id: number;
@@ -8,6 +9,7 @@ interface ProductDetails {
   thumbnailUrl: string;
   thumbnailAlt: string;
   description: string;
+  longDescription: string;
   rating: number;
 }
 
@@ -29,6 +31,9 @@ export const ProductDetails = ({ data }: ProductProps) => {
       </div>
       <h2 className="p-4 text-3xl font-bold">{data.title}</h2>
       <p className="p-4">{data.description}</p>
+      <article className="p-4 prose lg:prose-xl">
+        <ReactMarkdown>{data.longDescription}</ReactMarkdown>
+      </article>
       <Rating rating={data.rating} className="p-4" />
     </>
   );

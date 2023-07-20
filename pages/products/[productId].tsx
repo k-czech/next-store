@@ -16,6 +16,7 @@ const ProductIdPage = ({
           thumbnailUrl: data.image,
           thumbnailAlt: data.title,
           description: data.description,
+          longDescription: data.longDescription,
           rating: data.rating.rate,
         }}
       />
@@ -26,7 +27,7 @@ const ProductIdPage = ({
 export default ProductIdPage;
 
 export const getStaticPaths = async () => {
-  const res = await fetch("https://fakestoreapi.com/products");
+  const res = await fetch("https://naszsklep-api.vercel.app/api/products");
   const data: StoreApiResponse[] = await res.json();
   return {
     paths: data.map((product) => {
@@ -57,7 +58,7 @@ export const getStaticProps = async ({
   }
 
   const res = await fetch(
-    `https://fakestoreapi.com/products/${params?.productId}`
+    `https://naszsklep-api.vercel.app/api/products/${params?.productId}`
   );
   const data: StoreApiResponse | null = await res.json();
 
@@ -73,6 +74,7 @@ export interface StoreApiResponse {
   title: string;
   price: number;
   description: string;
+  longDescription: string;
   category: string;
   image: string;
   rating: {
