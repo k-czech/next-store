@@ -1,5 +1,6 @@
 import { ProductDetails } from "@/components/Product";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
+import { serialize } from "next-mdx-remote/serialize";
 
 const ProductIdPage = ({
   data,
@@ -62,9 +63,19 @@ export const getStaticProps = async ({
   );
   const data: StoreApiResponse | null = await res.json();
 
+  if (!data) {
+    return {
+      props: {},
+      notFound: true,
+    };
+  }
+
   return {
     props: {
-      data,
+      data: {
+        ...data,
+        longDescription: await serialize(data.longDescription),
+      },
     },
   };
 };

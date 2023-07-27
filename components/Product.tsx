@@ -1,3 +1,4 @@
+import { MarkdownResult } from "@/types/utils";
 import { NextSeo } from "next-seo";
 import Image from "next/image"; // NextJS 12 => import Image from 'next/legacy/image'
 import Link from "next/link";
@@ -10,7 +11,7 @@ interface ProductDetails {
   thumbnailUrl: string;
   thumbnailAlt: string;
   description: string;
-  longDescription: string;
+  longDescription: MarkdownResult;
   rating: number;
 }
 

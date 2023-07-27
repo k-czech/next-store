@@ -1,23 +1,28 @@
+import { MarkdownResult } from "@/types/utils";
+import { MDXRemote } from "next-mdx-remote";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
 
 interface MarkdownProps {
-  children: string;
+  children: MarkdownResult;
 }
 
 export const Markdown = ({ children }: MarkdownProps) => {
   return (
-    <ReactMarkdown
+    <MDXRemote
+      {...children}
       components={{
-        a: ({ href, ...props }) => {
-          if (!href) {
-            return false;
+        a: ({ href, children, ...props }) => {
+          if (!href) return null;
+          if (href?.includes("http://" || "https://")) {
+            return (
+              <a href={href} rel="noopener noreferrer" {...props}>
+                {children}
+              </a>
+            );
           }
-          return <Link href={href} {...props}></Link>;
+          return <Link href={href}>{children}</Link>;
         },
       }}
-    >
-      {children}
-    </ReactMarkdown>
+    />
   );
 };
