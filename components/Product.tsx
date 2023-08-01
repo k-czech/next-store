@@ -1,26 +1,27 @@
-import { MarkdownResult } from "@/types/utils";
-import { NextSeo } from "next-seo";
-import Image from "next/image"; // NextJS 12 => import Image from 'next/legacy/image'
-import Link from "next/link";
-import { Markdown } from "./Markdown";
-import { Rating } from "./Rating";
+import { MarkdownResult } from '@/types/utils'
+import { NextSeo } from 'next-seo'
+import Image from 'next/image' // NextJS 12 => import Image from 'next/legacy/image'
+import Link from 'next/link'
+import { Markdown } from './Markdown'
+import { Rating } from './Rating'
+import { useCartState } from './Cart/CartContext'
 
 interface ProductDetails {
-  id: number;
-  title: string;
-  thumbnailUrl: string;
-  thumbnailAlt: string;
-  description: string;
-  longDescription: MarkdownResult;
-  rating: number;
+  id: number
+  title: string
+  thumbnailUrl: string
+  thumbnailAlt: string
+  description: string
+  longDescription: MarkdownResult
+  rating: number
 }
 
 interface ProductProps {
-  data: ProductDetails;
+  data: ProductDetails
 }
 
 export const ProductDetails = ({ data }: ProductProps) => {
-  const { title, description, thumbnailAlt, thumbnailUrl, id } = data;
+  const { title, description, thumbnailAlt, thumbnailUrl, id } = data
   return (
     <>
       <Link href="/products">Wróć do listy produktów</Link>
@@ -37,15 +38,15 @@ export const ProductDetails = ({ data }: ProductProps) => {
               {
                 url: thumbnailUrl,
                 alt: thumbnailAlt,
-                type: "image/jpeg",
+                type: 'image/jpeg',
               },
             ],
-            siteName: "Next store",
+            siteName: 'Next store',
           }}
           twitter={{
-            handle: "@handle",
-            site: "@site",
-            cardType: "summary_large_image",
+            handle: '@handle',
+            site: '@site',
+            cardType: 'summary_large_image',
           }}
         />
         <Image
@@ -62,19 +63,20 @@ export const ProductDetails = ({ data }: ProductProps) => {
       </article>
       <Rating rating={data.rating} className="p-4" />
     </>
-  );
-};
+  )
+}
 
 type ProductListItem = Pick<
   ProductDetails,
-  "id" | "title" | "thumbnailUrl" | "thumbnailAlt"
->;
+  'id' | 'title' | 'thumbnailUrl' | 'thumbnailAlt'
+>
 
 interface ProductListItemProps {
-  data: ProductListItem;
+  data: ProductListItem
 }
 
 export const ProductListItem = ({ data }: ProductListItemProps) => {
+  const cartState = useCartState()
   return (
     <>
       <div className="bg-white p-4 aspect-video w-full relative">
@@ -85,21 +87,22 @@ export const ProductListItem = ({ data }: ProductListItemProps) => {
           className="object-contain"
         />
       </div>
-      {/* NextJS 12 */}
-      {/* <div className="bg-white p-4">
-        <Image
-          alt={data.thumbnailAlt}
-          src={data.thumbnailUrl}
-          layout="responsive"
-          width={16}
-          height={9}
-          objectFit="contain"
-        />
-      </div> */}
-      {/* NextJS 12 */}
-      <Link href={`/products/${data.id}`}>
-        <h2 className="p-4 text-3xl font-bold">{data.title}</h2>
-      </Link>
+      <div className="p-4 ">
+        <Link href={`/products/${data.id}`}>
+          <h2 className="text-3xl font-bold">{data.title}</h2>
+        </Link>
+        <button
+          onClick={() =>
+            cartState.addCartItem({
+              price: 24.37,
+              title: data.title,
+            })
+          }
+          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 mt-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+        >
+          Add to cart
+        </button>
+      </div>
     </>
-  );
-};
+  )
+}

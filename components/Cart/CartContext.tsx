@@ -7,6 +7,7 @@ interface CartItem {
 
 interface CasrtState {
   items: CartItem[]
+  addCartItem: (item: CartItem) => void
 }
 
 export const CartContext = createContext<CasrtState | null>(null)
@@ -23,6 +24,9 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
     <CartContext.Provider
       value={{
         items: cartItems,
+        addCartItem: item => {
+          setCartItems(prevState => [...prevState, item])
+        },
       }}
     >
       {children}
