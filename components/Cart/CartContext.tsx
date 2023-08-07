@@ -1,4 +1,14 @@
-import { ReactNode, createContext, useContext, useState } from 'react'
+import {
+  getCartItemsFromLocalStorage,
+  setCartItemsToLocalStorage,
+} from '@/utils/cartStorage'
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 interface CartItem {
   readonly id: number
@@ -8,7 +18,7 @@ interface CartItem {
 }
 
 export interface CartState {
-  readonly items: readonly CartItem[]
+  readonly items: readonly CartItem[] | undefined
   readonly addCartItem: (item: CartItem) => void
   readonly removeCartItem: (id: CartItem['id']) => void
 }
@@ -16,7 +26,18 @@ export interface CartState {
 export const CartContext = createContext<CartState | null>(null)
 
 export const CartContextProvider = ({ children }: { children: ReactNode }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [cartItems, setCartItems] = useState<CartItem[] | undefined>(undefined)
+
+  useEffect(() => {
+    setCartItems(getCartItemsFromLocalStorage())
+  }, [])
+
+  useEffect(() => {
+    if (cartItems === undefined) {
+      return
+    }
+    setCartItemsToLocalStorage(cartItems)
+  }, [cartItems])
 
   return (
     <CartContext.Provider
@@ -24,6 +45,10 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
         items: cartItems,
         addCartItem: item => {
           setCartItems(prevState => {
+            if (!prevState) {
+              return
+            }
+
             const existingItem = prevState.find(
               existingItem => existingItem.id === item.id,
             )
@@ -45,6 +70,10 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
         },
         removeCartItem: id => {
           setCartItems(prevState => {
+            if (!prevState) {
+              return
+            }
+
             const existingItem = prevState.find(
               existingItem => existingItem.id === id,
             )

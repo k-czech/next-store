@@ -6,7 +6,7 @@ export const CartBar = () => {
   return (
     <Link href="/cart">
       <div className="inline-flex">
-        <span className="mr-2">{cartState.items.length}</span>
+        <span className="mr-2">{cartState.items?.length}</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

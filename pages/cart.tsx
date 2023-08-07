@@ -5,7 +5,7 @@ type CartListItemProps = Pick<CartState, 'items' | 'removeCartItem'>
 export const CartListItem = ({ items, removeCartItem }: CartListItemProps) => {
   return (
     <ul role="list" className="-my-6 divide-y divide-gray-200">
-      {items.map((item, index) => (
+      {items?.map((item, index) => (
         <li key={`${item.title}_${index}`} className="flex py-6">
           <div className="ml-4 flex flex-1 justify-between items-center">
             <div>
@@ -54,7 +54,7 @@ export const CartSummary = ({ items }: CartSummaryProps) => {
   return (
     <div className="flex flex-col items-end">
       <h3 className="font-semibold">Cart summary</h3>
-      <h3 className="font-normal">Items in cart: {items.length}</h3>
+      <h3 className="font-normal">Items in cart: {items?.length}</h3>
     </div>
   )
 }
