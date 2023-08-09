@@ -7,7 +7,7 @@ import { Rating } from './Rating'
 import { useCartState } from './Cart/CartContext'
 
 interface ProductDetails {
-  id: number
+  id: string
   title: string
   thumbnailUrl: string
   thumbnailAlt: string
