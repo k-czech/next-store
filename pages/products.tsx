@@ -10,10 +10,10 @@ const ProductsPage = ({
     <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {data.products.map(product => {
         return (
-          <li key={product.id} className="shadow border-2">
+          <li key={product.slug} className="shadow border-2">
             <ProductListItem
               data={{
-                id: product.slug,
+                id: product.id,
                 title: product.name,
                 thumbnailUrl: product.images[0].url,
                 thumbnailAlt: product.name,
