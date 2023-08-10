@@ -13,7 +13,7 @@ const ProductsPage = ({
           <li key={product.slug} className="shadow border-2">
             <ProductListItem
               data={{
-                id: product.id,
+                id: product.slug,
                 title: product.name,
                 thumbnailUrl: product.images[0].url,
                 thumbnailAlt: product.name,
@@ -33,7 +33,6 @@ export const getStaticProps = async () => {
     query: gql`
       query GetAllProducts {
         products {
-          id
           slug
           price
           name
@@ -57,7 +56,6 @@ export interface GetProductsListResponse {
 }
 
 export interface Product {
-  id: string
   slug: string
   price: number
   name: string

@@ -14,7 +14,7 @@ const ProductIdPage = ({
     <div>
       <ProductDetails
         data={{
-          id: data.id,
+          id: data.slug,
           title: data.name,
           thumbnailUrl: data.images[0].url,
           thumbnailAlt: data.name,
@@ -35,14 +35,12 @@ export const getStaticPaths = async () => {
   }
 
   interface Product {
-    id: string
     slug: string
   }
   const { data } = await apolloClient.query<GetProductsSlugsProps>({
     query: gql`
       query GetProductsSlugs {
         products {
-          id
           slug
         }
       }
@@ -53,7 +51,7 @@ export const getStaticPaths = async () => {
     paths: data.products.map(product => {
       return {
         params: {
-          productId: product.id,
+          productId: product.slug,
         },
       }
     }),
@@ -75,7 +73,6 @@ export const getStaticProps = async ({
   }
 
   interface Product {
-    id: string
     slug: string
     name: string
     description: string
@@ -96,17 +93,16 @@ export const getStaticProps = async ({
 
   const { data } = await apolloClient.query<GetProductDetailsByIdProps>({
     variables: {
-      id: params.productId,
+      slug: params.productId,
     },
     query: gql`
-      query GetProductDetailsById($id: ID) {
-        product(where: { id: $id }) {
-          id
+      query GetProductDetails($slug: String!) {
+        product(where: { slug: $slug }) {
           slug
           name
           description
           price
-          images {
+          images(first: 1) {
             url
           }
         }
