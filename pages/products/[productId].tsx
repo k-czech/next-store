@@ -1,6 +1,12 @@
 import { ProductDetails } from '@/components/Product'
+import {
+  GetProductDetailsDocument,
+  GetProductDetailsQuery,
+  GetProductDetailsQueryVariables,
+  GetProductsSlugsDocument,
+  GetProductsSlugsQuery,
+} from '@/generated/gql/graphql'
 import { apolloClient } from '@/graphql/apolloClient'
-import { gql } from '@apollo/client'
 import { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 import { serialize } from 'next-mdx-remote/serialize'
 
@@ -30,21 +36,8 @@ const ProductIdPage = ({
 export default ProductIdPage
 
 export const getStaticPaths = async () => {
-  interface GetProductsSlugsProps {
-    products: Product[]
-  }
-
-  interface Product {
-    slug: string
-  }
-  const { data } = await apolloClient.query<GetProductsSlugsProps>({
-    query: gql`
-      query GetProductsSlugs {
-        products {
-          slug
-        }
-      }
-    `,
+  const { data } = await apolloClient.query<GetProductsSlugsQuery>({
+    query: GetProductsSlugsDocument,
   })
 
   return {
@@ -68,22 +61,6 @@ export type InferGetStaticPathsType<T> = T extends () => Promise<{
 export const getStaticProps = async ({
   params,
 }: GetStaticPropsContext<InferGetStaticPathsType<typeof getStaticPaths>>) => {
-  interface GetProductDetailsByIdProps {
-    product: Product
-  }
-
-  interface Product {
-    slug: string
-    name: string
-    description: string
-    price: number
-    images: Image[]
-  }
-
-  interface Image {
-    url: string
-  }
-
   if (!params?.productId) {
     return {
       props: {},
@@ -91,26 +68,17 @@ export const getStaticProps = async ({
     }
   }
 
-  const { data } = await apolloClient.query<GetProductDetailsByIdProps>({
+  const { data } = await apolloClient.query<
+    GetProductDetailsQuery,
+    GetProductDetailsQueryVariables
+  >({
     variables: {
       slug: params.productId,
     },
-    query: gql`
-      query GetProductDetails($slug: String!) {
-        product(where: { slug: $slug }) {
-          slug
-          name
-          description
-          price
-          images(first: 1) {
-            url
-          }
-        }
-      }
-    `,
+    query: GetProductDetailsDocument,
   })
 
-  if (!data) {
+  if (!data.product) {
     return {
       props: {},
       notFound: true,
