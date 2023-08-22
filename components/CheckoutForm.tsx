@@ -1,4 +1,4 @@
-import { FormEventHandler } from 'react'
+import { ChangeEventHandler, FormEventHandler, useState } from 'react'
 import { Main } from './Main'
 
 interface CheckoutFormProps {
@@ -15,9 +15,19 @@ interface CheckoutFormProps {
 }
 
 export const CheckoutForm = () => {
+  const [email, setEmail] = useState('')
+
+  const handleEmailChange:
+    | ChangeEventHandler<HTMLInputElement>
+    | undefined = e => {
+    setEmail(e.target.value)
+  }
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = e => {
     e.preventDefault()
-    console.log(e)
+    console.log({
+      email,
+    })
   }
   return (
     <div>
@@ -25,7 +35,14 @@ export const CheckoutForm = () => {
         <form className="space-y-8 bg-white p-8" onSubmit={handleSubmit}>
           <h2 className="text-xl ">Contact Information</h2>
           <label className="font-semibold">Email</label>
-          <input className="w-full" name="email" id="email" type="email" />
+          <input
+            className="w-full"
+            name="email"
+            id="email"
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+          />
           <h2 className="text-xl ">Payment details</h2>
           <label className="font-semibold">Name on card</label>
           <input
