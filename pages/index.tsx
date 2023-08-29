@@ -1,18 +1,11 @@
 import { Main } from '@/components/Main'
-import {
-  CreateProductReviewDocument,
-  CreateProductReviewMutation,
-  CreateProductReviewMutationVariables,
-} from '@/generated/gql/graphql'
-import { apolloClient } from '@/graphql/apolloClient'
+import { useCreateProductReviewMutation } from '@/generated/gql/graphql'
 
 const HomePage = () => {
-  const addReview = async () => {
-    const data = await apolloClient.mutate<
-      CreateProductReviewMutation,
-      CreateProductReviewMutationVariables
-    >({
-      mutation: CreateProductReviewDocument,
+  const [createReview, { data, loading, error }] =
+    useCreateProductReviewMutation()
+  const addReview = () => {
+    const data = createReview({
       variables: {
         review: {
           headline: 'Awesome product 123',
@@ -31,6 +24,9 @@ const HomePage = () => {
       <button onClick={addReview} type="button">
         Create review
       </button>
+      {loading && <div className="animate-bounce text-xl">Ładowanko...</div>}
+      {error && <pre>{JSON.stringify(error, null, 2)}</pre>}
+      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
     </Main>
   )
 }
