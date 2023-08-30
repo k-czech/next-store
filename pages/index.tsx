@@ -1,26 +1,32 @@
 import { Main } from '@/components/Main'
-import { useQuery, gql } from '@apollo/client'
-
-const GET_ALL_PRODUCTS = gql`
-  query GetAllProducts {
-    products {
-      id
-      slug
-      price
-      name
-    }
-  }
-`
+import { useCreateProductReviewMutation } from '@/generated/gql/graphql'
 
 const HomePage = () => {
-  const { loading, error, data } = useQuery(GET_ALL_PRODUCTS)
-
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Error : {error.message}</p>
+  const [createReview, { data, loading, error }] =
+    useCreateProductReviewMutation()
+  const addReview = () => {
+    const data = createReview({
+      variables: {
+        review: {
+          headline: 'Awesome product 123',
+          name: 'John Kimich',
+          email: 'john@example.co',
+          content: 'My favorite product in the store',
+          rating: 5,
+        },
+      },
+    })
+    console.log({ data })
+  }
 
   return (
     <Main>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <button onClick={addReview} type="button">
+        Create review
+      </button>
+      {loading && <div className="animate-bounce text-xl">Ładowanko...</div>}
+      {error && <pre>{JSON.stringify(error, null, 2)}</pre>}
+      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
     </Main>
   )
 }
