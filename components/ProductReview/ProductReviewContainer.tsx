@@ -10,7 +10,7 @@ export const ProductReviewContainer = ({
 }: ProductReviewContainerProps) => {
   return (
     <>
-      <ProductReviewForm />
+      <ProductReviewForm productSlug={productSlug} />
       <ProductReviewList productSlug={productSlug} />
     </>
   )
