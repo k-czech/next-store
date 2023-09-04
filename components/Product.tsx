@@ -2,12 +2,14 @@ import { MarkdownResult } from '@/types/utils'
 import { NextSeo } from 'next-seo'
 import Image from 'next/image' // NextJS 12 => import Image from 'next/legacy/image'
 import Link from 'next/link'
-import { Markdown } from './Markdown'
-import { Rating } from './Rating'
 import { useCartState } from './Cart/CartContext'
+import { Markdown } from './Markdown'
+import { ProductReviewContainer } from './ProductReview/ProductReviewContainer'
+import { Rating } from './Rating'
 
 interface ProductDetails {
   id: string
+  slug: string
   title: string
   thumbnailUrl: string
   thumbnailAlt: string
@@ -62,6 +64,8 @@ export const ProductDetails = ({ data }: ProductProps) => {
         <Markdown>{data.longDescription}</Markdown>
       </article>
       <Rating rating={data.rating} className="p-4" />
+
+      <ProductReviewContainer productSlug={data.slug} />
     </>
   )
 }
